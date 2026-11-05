@@ -1,4 +1,4 @@
-import type { IBuyer, Validation } from '../../types';
+import type { IBuyer, TValidation } from '../../types';
 
 export class Order {
     protected customerInfo: IBuyer = {
@@ -25,8 +25,8 @@ export class Order {
         };
     }
 
-    isValid(): Validation {
-        let validation: Validation = {};
+    isValid(): TValidation {
+        let validation: TValidation = {};
 
         if (this.customerInfo.address === '') {
             validation.address = 'Необходимо указать адрес';

@@ -106,12 +106,12 @@ Presenter - презентер содержит основную логику п
 
 ```
 interface IProduct {
-  id: string;
-  description: string;
-  image: string;
-  title: string;
-  category: string;
-  price: number | null;
+    id: string;
+    description: string;
+    image: string;
+    title: string;
+    category: string;
+    price: number | null;
 }
 ```
 
@@ -121,10 +121,10 @@ interface IProduct {
 
 ```
 interface IBuyer {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+    payment: TPayment;
+    email: string;
+    phone: string;
+    address: string;
 }
 ```
 
@@ -166,7 +166,15 @@ interface IBuyer {
 `isAvailable(id: string): boolean` - проверка наличия товара в корзине по его id, полученного в параметр метода.  
 
 #### Класс Order
-Модель отвечает за хранение и валидирования данных при оформлении заказа покупателем.
+Модель отвечает за хранение и валидирования данных при оформлении заказа покупателем. Типы данных для работы класса:
+```
+type TValidation = {
+    email?: string | undefined;
+    payment?: string | undefined;
+    phone?: string | undefined;
+    address?: string | undefined;
+}
+```
 
 Конструктор класса не принимает параметров.
 
@@ -180,4 +188,42 @@ interface IBuyer {
 `setField(field: string, value: string | TPayment): void` - устанавливает значение по полю. Значение и поле получены из параметров метода.  
 `getFields(): IBuyer` - получение всех данных покупателя.  
 `clean(): void` - очистка данных покупателя.  
-`isValid(): Validation` - валидация данных. Если поля не проходят валидацию, то функция выдает объект, где ключ **название поле**, а значение **текст ошибки**. Если поле заполненно корректно, то его не будет в объекте валидации
+`isValid(): TValidation` - валидация данных. Если поля не проходят валидацию, то функция выдает объект, где ключ **название поле**, а значение **текст ошибки**. Если поле заполненно корректно, то его не будет в объекте валидации
+
+### Слой коммуникации
+
+#### Класс Presenter
+
+Является связующим классом между моделями данных и запросами с сервера.
+
+Типы данных для работы класса:
+```
+interface IDataProducts {
+    total: number;
+    items: IProduct[];
+}
+
+interface IPostOrder extends IBuyer {
+    total: number;
+    items: string[];
+}
+
+interface ISuccessOrder {
+    id: string;
+    total: number;
+}
+
+interface IWrongOrder {
+    error: string;
+}
+```
+
+Конструктор:  
+`constructor(api: IApi)` - В конструктор передается экземпляр класса Api, который принимает baseurl.
+
+Поля класса:  
+`api: IApi` - экземпляр класса Api.
+
+Методы класса:  
+`getData(): Promise<IDataProducts>` - выполняет запрос к серверу и возвращает объект с массивом товаров.  
+`makeOrder(info: IPostOrder): Promise<ISuccessOrder | IWrongOrder>` - отправляет на сервер данные для заказа и возвращает его ответ.
