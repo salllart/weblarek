@@ -5,7 +5,7 @@ import { apiProducts } from './utils/data';
 import { Catalog } from './components/models/catalog';
 import { Cart } from './components/models/cart';
 import { Order } from './components/models/order';
-import { Presenter } from './components/communication layer/presenter';
+import { LarekApi } from './components/communication layer/larekapi';
 
 import { IProduct } from './types';
 
@@ -55,7 +55,7 @@ function testComponents(items: IProduct[]): void {
     orderModule.setField('payment', 'card');
     console.log('Поля формы, где заполенна только почта и вид оплаты', orderModule.getFields());
 
-    console.log('Объект валидации формы ', orderModule.isValid());
+    console.log('Объект валидации формы ', orderModule.validate());
 
     orderModule.clean();
     console.log('Поля формы после метода clean()', orderModule.getFields());
@@ -66,7 +66,11 @@ testComponents(apiProducts.items);
 console.log('------------------');
 
 const api = new Api(API_URL);
-const presenter = new Presenter(api);
+const larekApi = new LarekApi(api);
 
-const dataProducts = await presenter.getData();
-testComponents(dataProducts.items);
+larekApi.getData()
+    .then(res => {
+        catalogModule.setProducts(res.items);
+        console.log(catalogModule.getProducts());
+    })
+    .catch(err => console.log(err))

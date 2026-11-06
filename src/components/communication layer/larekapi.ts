@@ -1,6 +1,6 @@
 import type { IApi, IDataProducts, IPostOrder, ISuccessOrder, IWrongOrder } from "../../types";
 
-export class Presenter {
+export class LarekApi {
     constructor(protected api: IApi) {}
 
     getData(): Promise<IDataProducts> {

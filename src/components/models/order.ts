@@ -25,8 +25,8 @@ export class Order {
         };
     }
 
-    isValid(): TValidation {
-        let validation: TValidation = {};
+    validate(): TValidation {
+        const validation: TValidation = {};
 
         if (this.customerInfo.address === '') {
             validation.address = 'Необходимо указать адрес';

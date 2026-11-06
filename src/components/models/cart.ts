@@ -17,14 +17,8 @@ export class Cart {
         this.products.push(product);
     }
 
-    removeProduct(product: IProduct): void {
-        const idRemove = product.id;
-
-        this.products.forEach((product, index) => {
-            if (product.id === idRemove) {
-                this.products.splice(index, 1);
-            }
-        });
+    removeProduct(productToRemove: IProduct): void {
+        this.products = this.products.filter(p => p.id !== productToRemove.id);
     }
 
     clean(): void {
@@ -46,11 +40,6 @@ export class Cart {
     }
 
     isAvailable(id: string): boolean {
-        const isExist = this.products.find((product) => product.id === id);
-        if (isExist) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.products.some((product) => product.id === id)
     }
 }
