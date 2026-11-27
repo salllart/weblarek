@@ -271,14 +271,14 @@ interface IWrongOrder {
 Класс отвечает за шапку сайта. В шапке сайта есть кнопка корзины с счётчиком, которая открывает окно корзины.
 
 Конструктор:  
-`constructor(container: HTMLElement)` - конструктор принимает HTML элемент шапки.
+`constructor(events: IEvents, container: HTMLElement)` - конструктор принимает HTML элемент шапки и брокер событий.
 
 Поля класса:  
 `buttonElement: HTMLButtonElement` - кнопка, которая открывает окно корзины.  
 `counterElement: HTMLElement` - счётчик возле кнопки, отображает количество товаров в корзине.
 
 Сеттеры класса:
-`counter: number` - меняет текст counterElement. 
+`counter(value: number)` - меняет текст counterElement. 
 
 #### Класс Gallery.
 
@@ -295,7 +295,7 @@ interface IWrongOrder {
 Класс отвечает за отображения корзины веб-приложения. Корзина является контентом для модального окна.
 
 Конструктор:  
-`constructor(container: HTMLElement)` - конструктор принимает HTML элемент корзины.
+`constructor(events: IEvents, container: HTMLElement)` - конструктор принимает HTML элемент корзины и броккер событий.
 
 Поля класса:  
 `listElement: HTMLElement` - HTML элемент списка товаров корзины.  
@@ -362,10 +362,10 @@ interface ICardPreviewActions {
 `actions?: ICardPreviewActions` - объект колбэков компонента.
 
 Сеттеры класса:  
-`price(value: number)` - устанавливает textContent в `priceElement`.  
 `category(value: string)` - устанавливает textContent в `categoryElement` и применяет соответствующий CSS-класс модификатора категории.  
 `image(value: string)` - устанавливает src `imageElement`.  
 `text(value: string)` - устанавливает textContent в `textElement`.
+`disabled(value: boolean)` - устанавливает атрибут disabled в `buttonElement`.
 
 #### Класс CardBasket.
 
@@ -407,7 +407,7 @@ interface ICardBasketActions {
 Класс отвечает за отображение формы выбора способа оплаты и ввода адреса доставки при оформлении заказа. Наследуется от базового класса `Form`.
 
 Конструктор:  
-`constructor(container: HTMLFormElement)` - конструктор принимает HTML элемент формы заказа.
+`constructor(events: IEvents, container: HTMLFormElement)` - конструктор принимает HTML элемент формы заказа и брокер событий.
 
 Поля класса:  
 `paymentButtons: HTMLButtonElement[]` - массив HTML элементов кнопок выбора способа оплаты.  
@@ -422,7 +422,7 @@ interface ICardBasketActions {
 Класс отвечает за отображение формы ввода контактных данных покупателя при оформлении заказа. Наследуется от базового класса `Form`.
 
 Конструктор:  
-`constructor(container: HTMLFormElement)` - конструктор принимает HTML элемент формы контактов.
+`constructor(events: IEvents, container: HTMLFormElement)` - конструктор принимает HTML элемент формы контактов и брокер событий.
 
 Поля класса:  
 `emailInput: HTMLInputElement` - HTML элемент поля ввода электронной почты.  
@@ -431,3 +431,21 @@ interface ICardBasketActions {
 Сеттеры класса:  
 `email(value: string)` - устанавливает value в `emailInput`.  
 `phone(value: string)` - устанавливает value в `phoneInput`.
+
+### События веб-приложения.
+
+При взаимодействии пользователия и изменении модели генерируются события, которые с помощью брокера событий обрабатываются презентером.
+
+#### События формы.
+
+События:  
+`form-order:changed` - происходит когда пользователь выберает опцию или вводит в поле формы первого шага.  
+`form-order:submitted` - происходит когда пользователь преходит ко вторму шагу формы.
+`form-contacts:changed` - происходит когда пользователь вводит в поле формы второго шага.
+`form-contacts:submitted` - просиходит когда пользователь заканчивает оформление заказа.
+
+#### События корзины.
+
+События:
+`basket:open` - просиходит когда пользователь нажимает на кнопку открытия корзины в шапке.
+`basket:submitted` - происходит когда пользователь начинает оформление заказа.
