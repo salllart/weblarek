@@ -1,3 +1,5 @@
+import { categoryMap } from "../utils/constants";
+
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 export type TPayment = 'card' | 'cash' | '';
 
@@ -42,3 +44,5 @@ export interface ISuccessOrder {
 export interface IWrongOrder {
     error: string;
 }
+
+export type TCategory = keyof typeof categoryMap;
