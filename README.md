@@ -301,7 +301,7 @@ interface IWrongOrder {
 `priceElement: HTMLElement` - HTML элемент стоимости всех товаров корзины.  
 `buttonElement: HTMLButtonElement` - HTML элемент кнопки оформления заказа.
 
-Сеттеры класса:
+Сеттеры класса:  
 `list(value: HTMLElement[])` - добавляет карточки товаров в `listElement`.  
 `price(value: number)` - устанавливает textContent в `priceElement`.
 
