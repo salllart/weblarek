@@ -241,3 +241,193 @@ interface IWrongOrder {
 Методы класса:  
 `getData(): Promise<IDataProducts>` - выполняет запрос к серверу и возвращает объект с массивом товаров.  
 `makeOrder(info: IPostOrder): Promise<ISuccessOrder | IWrongOrder>` - отправляет на сервер данные для заказа и возвращает его ответ.
+
+### Слой представления
+
+Каждый класс слоя представления является потомком базового класса Component. К
+
+#### Класс Modal.
+
+Класс отвечает за модальное окно, контент окна может быть любой компонент.
+
+Конструктор:  
+`constructor(container: HTMLElement)` - конструктор принимает HTML элемент модального окна.
+
+Поля класса:  
+`closeButtonElement: HTMLButtonElement` - кнопка закрытия модалки.  
+`contentElement: HTMLElement` - контент модалки.  
+`windowElement: HTMLElement` - окно модалки.
+
+Методы класса:  
+`open(): void` - открывает модальное окно и отобржает его.  
+`makeOrder(info: IPostOrder): Promise<ISuccessOrder | IWrongOrder>` - отправляет на сервер данные для заказа и возвращает его ответ.  
+`render(data: IModalData): HTMLElement` - отрисовывет модальное окно и возвращает его.
+
+Сеттеры класса:
+`content: HTMLElement` - задаёт контент для `contentElement`.
+
+#### Класс Header.
+
+Класс отвечает за шапку сайта. В шапке сайта есть кнопка корзины с счётчиком, которая открывает окно корзины.
+
+Конструктор:  
+`constructor(container: HTMLElement)` - конструктор принимает HTML элемент шапки.
+
+Поля класса:  
+`buttonElement: HTMLButtonElement` - кнопка, которая открывает окно корзины.  
+`counterElement: HTMLElement` - счётчик возле кнопки, отображает количество товаров в корзине.
+
+Сеттеры класса:
+`counter: number` - меняет текст counterElement. 
+
+#### Класс Gallery.
+
+Класс отвечает за отображение карточек товаров. Галлерея имет одну страницу без пагинации.
+
+Конструктор:  
+`constructor(container: HTMLElement)` - конструктор принимает HTML элемент галлереи.
+
+Сеттеры класса:  
+`items: HTMLElement[]` - принимает массив HTML элементов карточек товаров.
+
+#### Класс Basket.
+
+Класс отвечает за отображения корзины веб-приложения. Корзина является контентом для модального окна.
+
+Конструктор:  
+`constructor(container: HTMLElement)` - конструктор принимает HTML элемент корзины.
+
+Поля класса:  
+`listElement: HTMLElement` - HTML элемент списка товаров корзины.  
+`priceElement: HTMLElement` - HTML элемент стоимости всех товаров корзины.  
+`buttonElement: HTMLButtonElement` - HTML элемент кнопки оформления заказа.
+
+Сеттеры класса:
+`list(value: HTMLElement[])` - добавляет карточки товаров в `listElement`.  
+`price(value: number)` - устанавливает textContent в `priceElement`.
+
+#### Класс Card.
+
+Класс отвечает за отображение карточки товара веб-приложения. Является базовым классом для всех видов карточек. Класс является дженериком, параметр типа `T` принимает интерфейс который расширяет сеттеры карточки, параметр типа используется дочерними классами.
+
+Конструктор:  
+`constructor(container: HTMLElement)` - конструктор принимает HTML элемент карточки товара.
+
+Поля класса:  
+`titleElement: HTMLElement` - HTML элемент названия товара.  
+`priceElement: HTMLElement` - HTML элемент стоимости товара.
+
+Сеттеры класса:  
+`title(value: string)` - устанавливает textContent в `titleElement`.  
+`price(value: number)` - устанавливает textContent в `priceElement`.
+
+#### Класс CardCatalog.
+
+Класс отвечает за отображение карточки товара в каталоге на главной странице. Наследуется от базового класса `Card`.
+
+Конструктор:  
+`constructor(container: HTMLElement, actions?: ICardActions)` - конструктор принимает HTML элемент карточки товара и объект с колбэком `onClick`, который срабатывает при нажатии на карточку. Интерфейс ICardActions:
+```
+interface ICardActions {
+    onClick: () => void;
+}
+```
+
+Поля класса:  
+`categoryElement: HTMLElement` - HTML элемент категории товара.  
+`imageElement: HTMLImageElement` - HTML элемент изображения товара.
+`actions?: ICardActions` - объект колбэков компонента.
+
+Сеттеры класса:  
+`category(value: string)` - устанавливает textContent в `categoryElement` и применяет соответствующий CSS-класс модификатора категории.  
+`image(value: string)` - устанавливает src для `imageElement`.
+
+#### Класс CardPreview.
+
+Класс отвечает за отображение подробной карточки товара в модальном окне. Наследуется от базового класса `Card`.
+
+Конструктор:  
+`constructor(container: HTMLElement, actions?: ICardPreviewActions)` - конструктор принимает HTML элемент карточки товара и объект с колбэком `onBuy`, который срабатывает при нажатии на кнопку покупки/удаления товара. Интерфейс ICardPreviewActions:
+```
+interface ICardPreviewActions {
+    onBuy: () => void;
+}
+```
+
+Поля класса:  
+`categoryElement: HTMLElement` - HTML элемент категории товара.  
+`imageElement: HTMLImageElement` - HTML элемент изображения товара.  
+`textElement: HTMLElement` - HTML элемент подробного описания товара.  
+`buttonElement: HTMLButtonElement` - HTML элемент кнопки добавления/удаления товара в корзину.  
+`actions?: ICardPreviewActions` - объект колбэков компонента.
+
+Сеттеры класса:  
+`price(value: number)` - устанавливает textContent в `priceElement`.  
+`category(value: string)` - устанавливает textContent в `categoryElement` и применяет соответствующий CSS-класс модификатора категории.  
+`image(value: string)` - устанавливает src `imageElement`.  
+`text(value: string)` - устанавливает textContent в `textElement`.
+
+#### Класс CardBasket.
+
+Класс отвечает за отображение компактной карточки товара в списке корзины. Наследуется от базового класса `Card`.
+
+Конструктор:  
+`constructor(container: HTMLElement, actions?: ICardBasketActions)` - конструктор принимает HTML элемент карточки товара и объект с колбэком `onRemove`, который срабатывает при нажатии на кнопку удаления товара из корзины. Интерфейс ICardBasketActions:
+```
+interface ICardBasketActions {
+    onRemove: () => void;
+}
+```
+
+Поля класса:  
+`indexElement: HTMLElement` - HTML элемент порядкового номера товара в корзине.  
+`buttonElement: HTMLButtonElement` - HTML элемент кнопки удаления товара из корзины.  
+`actions?: ICardBasketActions` - объект колбэков компонента.
+
+Сеттеры класса:  
+`index(value: number)` - устанавливает textContent в `indexElement`.
+
+#### Класс Form.
+
+Класс отвечает за отображение и управление базовой формой веб-приложения. Является базовым классом для всех форм оформления заказа. Класс является дженериком, параметр типа `T` принимает интерфейс который расширяет сеттеры карточки, параметр типа используется дочерними классами.
+
+Конструктор:  
+`constructor(container: HTMLFormElement)` - конструктор принимает HTML элемент формы.
+
+Поля класса:  
+`submitButton: HTMLButtonElement` - HTML элемент кнопки отправки формы.  
+`errorsElement: HTMLElement` - HTML элемент для вывода сообщений об ошибках валидации.
+
+Сеттеры класса:  
+`valid(value: boolean)` - управляет доступностью кнопки отправки формы `submitButton` в зависимости от валидности данных.  
+`errors(value: string)` - устанавливает textContent в `errorsElement`.
+
+#### Класс FormOrder.
+
+Класс отвечает за отображение формы выбора способа оплаты и ввода адреса доставки при оформлении заказа. Наследуется от базового класса `Form`.
+
+Конструктор:  
+`constructor(container: HTMLFormElement)` - конструктор принимает HTML элемент формы заказа.
+
+Поля класса:  
+`paymentButtons: HTMLButtonElement[]` - массив HTML элементов кнопок выбора способа оплаты.  
+`addressInput: HTMLInputElement` - HTML элемент поля ввода адреса доставки.
+
+Сеттеры класса:  
+`payment(value: TPayment)` - переключает активное состояние кнопок в `paymentButtons` в соответствии с выбранным способом оплаты.  
+`address(value: string)` - устанавливает value в `addressInput`.
+
+#### Класс FormContacts.
+
+Класс отвечает за отображение формы ввода контактных данных покупателя при оформлении заказа. Наследуется от базового класса `Form`.
+
+Конструктор:  
+`constructor(container: HTMLFormElement)` - конструктор принимает HTML элемент формы контактов.
+
+Поля класса:  
+`emailInput: HTMLInputElement` - HTML элемент поля ввода электронной почты.  
+`phoneInput: HTMLInputElement` - HTML элемент поля ввода номера телефона.
+
+Сеттеры класса:  
+`email(value: string)` - устанавливает value в `emailInput`.  
+`phone(value: string)` - устанавливает value в `phoneInput`.
